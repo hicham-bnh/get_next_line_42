@@ -6,7 +6,7 @@
 /*   By: mobenhab <mobenhab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 14:00:14 by mobenhab          #+#    #+#             */
-/*   Updated: 2025/11/22 12:29:22 by mobenhab         ###   ########.fr       */
+/*   Updated: 2025/11/22 13:46:50 by mobenhab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ static char	*ft_read(int fd, char *stash)
 			return (NULL);
 		}
 		buf[bytes] = '\0';
-		if (!stash)
-			return (NULL);
 		stash = ft_strjoin(stash, buf);
 	}
 	free(buf);
@@ -43,20 +41,18 @@ static char	*ft_line(char *stash)
 {
 	char	*line;
 	char	*new;
-	int		i;
+	size_t	i;
 	int		len;
 
 	i = 0;
 	if (!stash)
 	{
-		free(stash);
-		stash = NULL;
 		return (NULL);
 	}
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	len = i;
-	if (stash[i] == '\n')
+	if (stash[len] == '\n')
 		len++;
 	line = ft_substr(stash, 0, len);
 	new = ft_substr(stash, len, ft_strlen(stash) - len);

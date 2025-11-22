@@ -6,7 +6,7 @@
 /*   By: mobenhab <mobenhab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 14:00:16 by mobenhab          #+#    #+#             */
-/*   Updated: 2025/11/22 12:09:09 by mobenhab         ###   ########.fr       */
+/*   Updated: 2025/11/22 13:37:23 by mobenhab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ size_t	ft_strlen(const char *s)
 char	*ft_strchr(const char *s, int c)
 {
 	if (!s)
-		return (0);
+		return (NULL);
 	while (*s)
 	{
 		if (*s == (char)c)
@@ -62,18 +62,16 @@ char	*ft_strchr(const char *s, int c)
 char	*ft_strjoin(const char *s1, const char *s2)
 {
 	char	*res;
-	int		i;
-	int		j;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
 	j = 0;
-	res = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!res)
-		return (NULL);
 	if (!s1)
 		return (NULL);
 	if (!s2)
 		return (NULL);
+	res = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	while (s1[i])
 	{
 		res[i] = s1[i];
@@ -94,13 +92,13 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 	size_t	i;
 
 	i = 0;
-	if (!s)
-		return (0);
-	if (start >= ft_strlen(s))
+	if (!s || start >= ft_strlen(s))
 		return (NULL);
+	if (len > ft_strlen(s + start))
+		len = ft_strlen(s + start);
 	sub = malloc(sizeof(char) * (len));
 	if (!sub)
-		return (free(sub), NULL);
+		return (NULL);
 	while (i < len && s[start + i])
 	{
 		sub[i] = s[start + i];
