@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mobenhab <mobenhab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/20 13:55:54 by mobenhab          #+#    #+#             */
-/*   Updated: 2025/11/22 13:32:09 by mobenhab         ###   ########.fr       */
+/*   Created: 2025/11/25 14:41:51 by mobenhab          #+#    #+#             */
+/*   Updated: 2025/11/26 12:03:46 by mobenhab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,10 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 1000
 
 # endif
 
-char	*ft_strjoin(const char *s1, const char *s2);
-char	*ft_substr(const char *s, unsigned int start, size_t len);
-char	*ft_strchr(const char *s, int c);
-size_t	ft_strlen(const char *s);
-char	*get_next_line(int fd);
-// char	*ft_strdup(const char *s);
+char *get_next_line(int fd);
 
 #endif
