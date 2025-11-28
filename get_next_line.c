@@ -6,7 +6,7 @@
 /*   By: mobenhab <mobenhab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 14:41:25 by mobenhab          #+#    #+#             */
-/*   Updated: 2025/11/26 12:05:35 by mobenhab         ###   ########.fr       */
+/*   Updated: 2025/11/28 14:14:57 by mobenhab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,88 +14,91 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-size_t ft_strlen(char const *s)
+int	read_file(int fd, char *buffer)
 {
-	size_t i;
-	i = 0;
-	while (s[i])
-	i++;
-	return (i);
+	int	reader;
+
+	reader = 1;
+	reader = read(fd, buffer, BUFFER_SIZE);
+	if (reader >= 0)
+		buffer[reader] = '\0';
+	else
+		buffer[0] = '\0';
+	return (reader);
 }
 
-char *ft_substr(char const *s,unsigned int start, size_t len)
+char	*fill_line(char *buffer, char *line, int fd)
 {
-	size_t len_s;
-	size_t i;
-	char *tmp;
-	len_s = ft_strlen(s);
-	if (len_s < start)
-	len = 0;
-	if (len > len_s - start)
-	len = len_s - start;
-	tmp = malloc(sizeof(char) * (len + 1));
-	if (!tmp)
-	return (NULL);
-	i = 0;
-	while (i < len)
+	int	reader;
+
+	reader = 1;
+	while (buffer[0] != '\n' && reader > 0)
 	{
-		tmp [i] = s[start];
-		i++;
-		start++;
+		if (ft_strlen(buffer))
+		{
+			line = ft_realloc(line, buffer[0]);
+			if (!line)
+				return (NULL);
+			ft_memmove(buffer);
+		}
+		else
+			reader = read_file(fd, buffer);
 	}
-	tmp[i] = '\0';
-	return (tmp);
-}
-
-char	*ft_strcpy(char *stash, char *buf, size_t *count)
-{
-	size_t	i;
-
-	i = 0;
-	stash = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!stash)
+	if (reader == 0 && ft_strlen(line) == 0)
+	{
+		free(line);
 		return (NULL);
-	while (buf[i] && buf[i] != '\n')
-	{
-		stash[i] = buf[i];
-		i++;
 	}
-	stash[i] = '\0';
-	return (stash);
+	return (line);
 }
 
-int	ft_strchr(char c)
+char	*get_the_line(int fd, char *buffer)
 {
-	if (c == '\n')
-		return (0);
-	return (1);
+	char	*line;
+
+	line = malloc(1 * sizeof(char));
+	if (!line)
+		return (NULL);
+	line[0] = '\0';
+	line = fill_line(buffer, line, fd);
+	if (!line)
+		return (NULL);
+	if (buffer[0] == '\n')
+	{
+		line = ft_realloc(line, '\n');
+		if (!line)
+			return (NULL);
+		ft_memmove(buffer);
+	}
+	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*stash;
-	static char	*buf;
-	int			bytes;
-	size_t count;
+	static char	buffer[BUFFER_SIZE + 1];
+	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
+	{
+		buffer[0] = '\0';
 		return (NULL);
-	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buf)
+	}
+	line = get_the_line(fd, buffer);
+	if (!line)
 		return (NULL);
-	bytes = read(fd, buf, BUFFER_SIZE);
-	if (bytes <= 0)
-		return (NULL);
-	stash = ft_strcpy(stash, buf, &count);
-	buf = ft_substr(buf, count, ft_strlen(stash));
-	return (stash);
+	return (line);
 }
+
 // int	main(void)
 // {
 // 	int		fd;
 // 	char	*line;
 
-// 	fd = open("get_next_line.c", O_RDONLY);
+// 	fd = open("get_next_line.h", O_RDONLY);
+// 	line = get_next_line(fd);
+// 	printf("%s", line);
+// 	line = get_next_line(fd);
+// 	printf("%s", line);
 // 	line = get_next_line(fd);
 // 	printf("%s", line);
 // 	close(fd);
