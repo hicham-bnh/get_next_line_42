@@ -6,7 +6,7 @@
 /*   By: mobenhab <mobenhab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:40:46 by mobenhab          #+#    #+#             */
-/*   Updated: 2025/12/02 14:28:23 by mobenhab         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:50:46 by mobenhab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*ft_strjoin(const char *s1, const char *s2)
 		join[i] = s1[i];
 		i++;
 	}
-	while (s2[j] && s2[j] != '\n')
+	while (s2[j])
 	{
 		join[i + j] = s2[j];
 		j++;

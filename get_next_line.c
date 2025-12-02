@@ -6,7 +6,7 @@
 /*   By: mobenhab <mobenhab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 13:40:41 by mobenhab          #+#    #+#             */
-/*   Updated: 2025/12/02 14:23:56 by mobenhab         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:53:46 by mobenhab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,13 @@ char	*get_next_line(int fd)
 	if (!read(fd, buffer, BUFFER_SIZE))
 		return (NULL);
 	line = ft_strdup(buffer);
+	// printf("%s", line);
 	ft_memmove(buffer);
-	while (line[BUFFER_SIZE] != '\n' && ft_read(fd, buffer))
+	// printf("%s", buffer);
+	while (ft_read(fd, buffer))
 	{
         line = ft_strjoin(line , buffer);
+		// printf("%s", line);
         ft_memmove(buffer);
 	}
     line[BUFFER_SIZE + 1] = '\n';
