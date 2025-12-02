@@ -5,90 +5,75 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mobenhab <mobenhab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/25 16:39:59 by mobenhab          #+#    #+#             */
-/*   Updated: 2025/11/28 14:17:27 by mobenhab         ###   ########.fr       */
+/*   Created: 2025/12/02 13:40:46 by mobenhab          #+#    #+#             */
+/*   Updated: 2025/12/02 14:28:23 by mobenhab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(char const *s)
+size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
 	i = 0;
+	if (!s)
+		return (0);
 	while (s[i])
 		i++;
 	return (i);
 }
-
-void	ft_memmove(char *buf)
-{
-	size_t	i;
-
-	i = 0;
-	while (buf[i + 1])
-	{
-		buf[i] = buf[i + 1];
-		i++;
-	}
-	buf[i] = '\0';
-}
-
-char	*ft_strcpy(char *dest, char *src)
-{
-	size_t	i;
-
-	i = 0;
-	while (src[i])
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-char	*ft_realloc(char *str, char c)
-{
-	char	*res;
-	size_t	len;
-
-	res = ft_strdup(str);
-	if (!res)
-	{
-		free(str);
-		return (NULL);
-	}
-	len = ft_strlen(res);
-	free(str);
-	str = malloc(sizeof(char) * (len + 2));
-	if (!str)
-	{
-		free(res);
-		return (NULL);
-	}
-	str = ft_strcpy(str, res);
-	free(res);
-	str[len] = c;
-	str[len + 1] = '\0';
-	return (str);
-}
-
 char	*ft_strdup(const char *s)
 {
-	char	*tmp;
 	size_t	i;
+	char	*dup;
 
 	i = 0;
-	tmp = malloc(sizeof(char) * (ft_strlen(s) + 1));
-	if (!tmp)
+	dup = malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!dup)
 		return (NULL);
 	while (s[i])
 	{
-		tmp[i] = s[i];
+		dup[i] = s[i];
 		i++;
 	}
-	tmp[i] = '\0';
-	return (tmp);
+	dup[i] = '\0';
+	return (dup);
+}
+char	*ft_strjoin(const char *s1, const char *s2)
+{
+	char	*join;
+	size_t	j;
+	size_t	i;
+
+	i = 0;
+	j = 0;
+	join = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!join)
+		return (NULL);
+	while (s1[i])
+	{
+		join[i] = s1[i];
+		i++;
+	}
+	while (s2[j] && s2[j] != '\n')
+	{
+		join[i + j] = s2[j];
+		j++;
+	}
+	join[i + j] = '\0';
+	return (join);
+}
+
+void	ft_memmove(char *buffer)
+{
+	size_t	i;
+
+	i = 0;
+	while (buffer[i + 1])
+	{
+		buffer[i] = buffer[i + 1];
+		i++;
+	}
+	buffer[i] = '\0';
 }
