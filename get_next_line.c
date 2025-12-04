@@ -5,80 +5,108 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mobenhab <mobenhab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/02 13:40:41 by mobenhab          #+#    #+#             */
-/*   Updated: 2025/12/02 14:53:46 by mobenhab         ###   ########.fr       */
+/*   Created: 2025/12/04 13:29:51 by mobenhab          #+#    #+#             */
+/*   Updated: 2025/12/04 14:51:07 by mobenhab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <fcntl.h>
-#include <stdio.h>
 
-// char	*fill_line(char *buffer, char *line, int fd)
-// {
-// 	if (line[0] == '\0')
-// 	{
-// 		line = ft_strdup(buffer);
-// 		if (!line)
-// 			return (NULL);
-// 	}
-// 	else
-// 		line = ft_strjoin(line, buffer);
-// 	if (!line)
-// 		return (NULL);
-// }
 
-// char	*get_the_line(int fd, char *buffer)
-// {
-// 	char	*line;
-
-// 	line = malloc(sizeof(char) * 1);
-// 	if (!line)
-// 		return (NULL);
-// 	line[0] = '\0';
-// 	line = fill_line(buffer, line, fd);
-// }
-
-int	ft_read(int fd, char *buffer)
+char	*newline(char *line, char *buf, ssize_t	endl,ssize_t readbytes)
 {
-	int	reader;
+	char	*newline;
+	int	lnewline;
 
-	reader = read(fd, buffer, BUFFER_SIZE);
-	if (reader < 1)
-		return (0);
-	return (1);
+	if (!line && !buf[0])
+		return(NULL);
+	lnewline = ft_strlen(line);
+	if (endl == readbytes)
+		lnewline += endl;
+	else
+		lnewline += endl + 1;
+	newline = malloc(sizeof(char) * (lnewline + 1));
+	if (!newline)
+		return (freeline(line));
+	newline[0] = '\0';
+	if (line)
+		ft_strlcat(newline, line, ft_strlen(line));
+	if (endl == readbytes)
+		ft_strlcat(newline, buf, endl);
+	else
+		ft_strlcat(newline, buf, endl + 1);
+	free(line);
+	return (newline);
 }
+
+void	newbuf(char *buf, ssize_t endl, ssize_t readbytes)
+{
+	ssize_t	i;
+
+	i = 0;
+	while (i < readbytes)
+	{
+		if (endl + 1 + i < readbytes)
+			buf[i] = buf[endl + 1 + i];
+		else
+			buf[i] = '\0';
+		i++;
+	}
+	
+}
+
+char	*freeline(char *line)
+{
+	if (line)
+		free(line);
+	return (NULL);
+}
+
 
 char	*get_next_line(int fd)
 {
-	static char	buffer[BUFFER_SIZE + 1];
-	char		*line;
-
-	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
-		return (NULL);
-	if (!read(fd, buffer, BUFFER_SIZE))
-		return (NULL);
-	line = ft_strdup(buffer);
-	// printf("%s", line);
-	ft_memmove(buffer);
-	// printf("%s", buffer);
-	while (ft_read(fd, buffer))
-	{
-        line = ft_strjoin(line , buffer);
-		// printf("%s", line);
-        ft_memmove(buffer);
-	}
-    line[BUFFER_SIZE + 1] = '\n';
-	return (line);
-}
-
-int	main(void)
-{
-	int		fd;
+	static	char	buf[BUFFER_SIZE + 1];
 	char	*line;
+	ssize_t	readbytes;
+	ssize_t	endl;
+	int		stop;
 
-	fd = open("get_next_line.h", O_RDONLY);
-	line = get_next_line(fd);
-	printf("%s", line);
-	close(fd);
+	stop = 0;
+	buf[BUFFER_SIZE] = '\0';
+	if(fd < 0 || BUFFER_SIZE < 1)
+		return (NULL);
+	line = NULL;
+	while (!stop)
+	{
+		readbytes = readline(buf, fd);
+		if (readbytes < 0)
+			return(freeline(line));
+		endl = endline(buf);
+		if (readbytes != endl || readbytes == 0)
+			stop = 1;
+		if (buf[0])
+		{
+			line = newline(line, buf, endl, readbytes);
+			if(!line)
+				return(NULL);
+			newbuf(buf, endl, readbytes);
+		}
+	}
+	return(line);
 }
+
+// #include <stdio.h>
+// #include <fcntl.h>
+
+// int	main()
+// {
+// 	int i = 0;
+// 	char *str;
+// 	int	fd = open("get_next_line.h", O_RDONLY);
+
+// 	str = get_next_line(fd);
+// 	printf("%s", str);
+// 	free(str);
+
+// 	return (0);
+// }

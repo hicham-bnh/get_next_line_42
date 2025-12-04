@@ -5,75 +5,63 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mobenhab <mobenhab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/02 13:40:46 by mobenhab          #+#    #+#             */
-/*   Updated: 2025/12/02 14:50:46 by mobenhab         ###   ########.fr       */
+/*   Created: 2025/12/04 13:34:08 by mobenhab          #+#    #+#             */
+/*   Updated: 2025/12/04 14:49:33 by mobenhab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+ssize_t	ft_strlen(char *str)
 {
-	size_t	i;
+	ssize_t	i;
 
 	i = 0;
-	if (!s)
+	if (!str)
 		return (0);
-	while (s[i])
+	while (str[i])
 		i++;
 	return (i);
 }
-char	*ft_strdup(const char *s)
-{
-	size_t	i;
-	char	*dup;
 
-	i = 0;
-	dup = malloc(sizeof(char) * (ft_strlen(s) + 1));
-	if (!dup)
-		return (NULL);
-	while (s[i])
-	{
-		dup[i] = s[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
-}
-char	*ft_strjoin(const char *s1, const char *s2)
+ssize_t	readline(char *buf, int fd)
 {
-	char	*join;
-	size_t	j;
-	size_t	i;
+	ssize_t	readbytes;
 
-	i = 0;
-	j = 0;
-	join = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!join)
-		return (NULL);
-	while (s1[i])
+	if (fd < 0 || BUFFER_SIZE < 1)
+		return (0);
+	if (buf[0])
+		readbytes = ft_strlen(buf);
+	else
 	{
-		join[i] = s1[i];
-		i++;
+		readbytes = read(fd, buf, BUFFER_SIZE);
+		if (readbytes < 0)
+			return (-1);
 	}
-	while (s2[j])
-	{
-		join[i + j] = s2[j];
-		j++;
-	}
-	join[i + j] = '\0';
-	return (join);
+	return (readbytes);
 }
 
-void	ft_memmove(char *buffer)
+ssize_t	endline(char *buf)
 {
-	size_t	i;
+	ssize_t	i;
 
 	i = 0;
-	while (buffer[i + 1])
+	while (buf[i] != '\n' && buf[i])
+		i++;
+	return (i);
+}
+
+void	ft_strlcat(char *dst, char *src, int endl)
+{
+	int	i;
+	int	ldst;
+
+	i = 0;
+	ldst = ft_strlen(dst);
+	while (src[i] && i < endl)
 	{
-		buffer[i] = buffer[i + 1];
+		dst[ldst + i] = src[i];
 		i++;
 	}
-	buffer[i] = '\0';
+	dst[ldst + i] = '\0';
 }
