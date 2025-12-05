@@ -1,30 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mobenhab <mobenhab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/02 11:29:05 by mobenhab          #+#    #+#             */
-/*   Updated: 2025/12/02 12:16:10 by mobenhab         ###   ########.fr       */
+/*   Created: 2025/12/05 00:46:10 by mobenhab          #+#    #+#             */
+/*   Updated: 2025/12/05 01:07:55 by mobenhab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
+# include <fcntl.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 1
+# endif
+# ifndef OPEN_MAX
+#  define OPEN_MAX 1024
 # endif
 
-size_t	ft_strlen(const char *s);
-
 int		ft_check_line(char *str);
-
+size_t	ft_strlen(const char *s);
+char	*get_next_line(int fd);
 char	*ft_strdup(const char *s);
 char	*ft_strjoin(char *s1, char *s2);
-char	*get_next_line(int fd);
 
 #endif
