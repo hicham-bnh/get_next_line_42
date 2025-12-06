@@ -69,7 +69,7 @@ char	*get_next_line(int fd)
 	int			read_byte;
 
 	read_byte = 1;
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 1024)
 		return (NULL);
 	line = ft_strdup(buffer[fd]);
 	if (!line)
